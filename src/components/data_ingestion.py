@@ -1,5 +1,5 @@
 import sys
-from pathlib import Path
+import os
 from dataclasses import dataclass
 
 import pandas as pd
@@ -11,10 +11,10 @@ from src.logger import logging
 
 @dataclass
 class DataIngestionConfig:
-    artifacts_dir: Path = Path("artifacts")
-    train_data_path: Path = artifacts_dir / "train.csv"
-    test_data_path: Path = artifacts_dir / "test.csv"
-    raw_data_path: Path = artifacts_dir / "raw.csv"
+    artifacts_dir: str = os.path.join("artifacts")
+    train_data_path: str = os.path.join(artifacts_dir, "train.csv")
+    test_data_path: str = os.path.join(artifacts_dir, "test.csv")
+    raw_data_path: str = os.path.join(artifacts_dir, "raw.csv")
 
 
 class DataIngestion:
@@ -25,22 +25,24 @@ class DataIngestion:
         logging.info("Starting data ingestion process")
 
         try:
-            # Project root
-            project_root = Path(__file__).resolve().parents[2]
+            # Project root (go two levels up from current file)
+            project_root = os.path.abspath(
+                os.path.join(os.path.dirname(__file__), "..", "..")
+            )
 
             # Dataset path
-            data_path = (
-                project_root
-                / "notebook"
-                / "data"
-                / "StudentsPerformance.csv"
+            data_path = os.path.join(
+                project_root,
+                "notebook",
+                "data",
+                "StudentsPerformance.csv"
             )
 
             logging.info(f"Reading dataset from: {data_path}")
             df = pd.read_csv(data_path)
 
             # Create artifacts directory
-            self.ingestion_config.artifacts_dir.mkdir(exist_ok=True)
+            os.makedirs(self.ingestion_config.artifacts_dir, exist_ok=True)
 
             logging.info("Saving raw data")
             df.to_csv(self.ingestion_config.raw_data_path, index=False)
@@ -56,8 +58,8 @@ class DataIngestion:
             logging.info("Data ingestion completed successfully")
 
             return (
-                str(self.ingestion_config.train_data_path),
-                str(self.ingestion_config.test_data_path)
+                self.ingestion_config.train_data_path,
+                self.ingestion_config.test_data_path
             )
 
         except Exception as e:
@@ -68,6 +70,9 @@ class DataIngestion:
 if __name__ == "__main__":
     obj = DataIngestion()
     train_data, test_data = obj.initiate_data_ingestion()
+
+
+
 
 
 

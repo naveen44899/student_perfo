@@ -1,19 +1,21 @@
 import logging
-from pathlib import Path
+import os
 from datetime import datetime
 
+logs_dir = os.path.join(os.getcwd(), "logs")
+os.makedirs(logs_dir, exist_ok=True)
 
-logs_dir = Path.cwd() / "logs"
-logs_dir.mkdir(parents=True, exist_ok=True)  # Create folder if it doesn't exist
-
-# Log file name
-log_file = logs_dir / f"{datetime.now().strftime('%m_%d_%Y_%H_%M_%S')}.log"
+timestamp = datetime.now().strftime('%m_%d_%Y_%H_%M_%S')
+log_filename = f"{timestamp}.log"
+log_file = os.path.join(logs_dir, log_filename)
 
 logging.basicConfig(
     filename=log_file,
     format="[ %(asctime)s ] %(lineno)d %(name)s - %(levelname)s - %(message)s",
     level=logging.INFO
 )
+if __name__ == "__main__":
+    logging.info("logging started")
 
 
 
