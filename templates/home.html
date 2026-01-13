@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h1>Student Exam Performance Indicator</h1>
+
+<form action="{{ url_for('predict_datapoint') }}" method="post">
+
+    Gender:
+    <select name="gender" required>
+        <option disabled selected value="">Select</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+    </select><br><br>
+
+    Ethnicity:
+    <select name="ethnicity" required>
+        <option disabled selected value="">Select</option>
+        <option value="group A">Group A</option>
+        <option value="group B">Group B</option>
+        <option value="group C">Group C</option>
+        <option value="group D">Group D</option>
+        <option value="group E">Group E</option>
+    </select><br><br>
+
+    Parent Education:
+    <select name="parental_level_of_education" required>
+        <option value="high school">high school</option>
+        <option value="some college">some college</option>
+        <option value="associate's degree">associate's degree</option>
+        <option value="bachelor's degree">bachelor's degree</option>
+        <option value="master's degree">master's degree</option>
+    </select><br><br>
+
+    Lunch:
+    <select name="lunch" required>
+        <option value="standard">standard</option>
+        <option value="free/reduced">free/reduced</option>
+    </select><br><br>
+
+    Test Prep:
+    <select name="test_preparation_course" required>
+        <option value="none">none</option>
+        <option value="completed">completed</option>
+    </select><br><br>
+
+    Reading Score:
+    <input type="number" name="reading_score" min="0" max="100" required><br><br>
+
+    Writing Score:
+    <input type="number" name="writing_score" min="0" max="100" required><br><br>
+
+    <button type="submit">Predict Maths Score</button>
+</form>
+
+{% if results %}
+<h2>Prediction: {{ results }}</h2>
+{% endif %}
+
+</body>
+</html>
+
+
