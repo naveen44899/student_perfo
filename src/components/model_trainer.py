@@ -45,24 +45,39 @@ class ModelTrainer:
                 "RandomForest Regressor": RandomForestRegressor(),
                 "AdaBoost Regressor": AdaBoostRegressor(),
                 "GradientBoosting Regressor": GradientBoostingRegressor(),
-                "XGBoost Regressor": XGBRegressor(
-                    objective="reg:squarederror",
-                    eval_metric="rmsle",
-                    n_estimators=100
-                )
-            }
-
-            model_report = evaluate_models(
+                "XGBoost Regressor": XGBRegressor(objective="reg:squarederror", random_state=42) }        
+               
+            params = {"DecisionTree Regressor": {
+                                    "criterion": ["squared_error", "friedman_mse"]},
+                      "RandomForest Regressor": {
+                                    "n_estimators": [50, 100, 200]},
+                     "GradientBoosting Regressor": {
+                                    "learning_rate": [0.01, 0.1],
+                                    "n_estimators": [50, 100]},
+                      "AdaBoost Regressor": {
+                                    "learning_rate": [0.01, 0.1],
+                                    "n_estimators": [50, 100]
+                                },
+                     "XGBoost Regressor": {
+                                    "learning_rate": [0.01, 0.1],
+                                    "n_estimators": [50, 100]
+                                }
+                            }         
+                                       
+                            
+            model_report,trained_models = evaluate_models(
                 x_train=x_train,
                 y_train=y_train,
                 x_test=x_test,
                 y_test=y_test,
-                models=models
+                models=models,
+                params=params
             )
 
-            best_model_score = max(model_report.values())
+            
             best_model_name = max(model_report, key=model_report.get)
-            best_model = models[best_model_name]
+            best_model_score = model_report[best_model_name]
+            best_model = trained_models[best_model_name]
 
             if best_model_score < 0.6:
                 raise CustomException("No best model found", sys)
