@@ -1,22 +1,29 @@
-from setuptools import find_packages,setup
+from setuptools import find_packages, setup
 from typing import List
 
-hypen_e_dot = "-e ."
-def  get_requirements(file_path:str)->List[str]:
+HYPHEN_E_DOT = "-e ."
+
+def get_requirements(file_path: str) -> List[str]:
     requirements = []
-    with open("requirements.txt")as file_obj:
+
+    with open(file_path) as file_obj:
         requirements = file_obj.readlines()
-        [req.replace("\n","") for req in requirements] # in requirements.txt new line(\n) also printed so we are removing it
-    
-        if hypen_e_dot in requirements:
-            requirements.remove(hypen_e_dot)
+
+    # Remove newline characters
+    requirements = [req.strip() for req in requirements]
+
+    # Remove "-e ." if present
+    if HYPHEN_E_DOT in requirements:
+        requirements.remove(HYPHEN_E_DOT)
+
     return requirements
 
+
 setup(
-    name = "student_performance",
-    version = "0.0.1",
-    author = "naveen",
-    author_email = "naveen8296088066@gmail.com",
-    packages = find_packages(),
-    install_requires = get_requirements("requirements.txt")
+    name="student_performance",
+    version="0.0.1",
+    author="Naveen",
+    author_email="naveen8296088066@gmail.com",
+    packages=find_packages(),
+    install_requires=get_requirements("requirements.txt"),
 )
